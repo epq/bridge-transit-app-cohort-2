@@ -75,6 +75,22 @@ body {
 .asset.fa-cubes {
   padding-left: 5px; }
 
+.Event-list {
+  align-content: space-around;
+  background: #eee;
+  color: #34495E;
+  display: flex;
+  flex-flow: column wrap;
+  font-family: 'Montserrat', sans-serif;
+  justify-content: space-around;
+  margin: 0 auto;
+  min-height: 35vh;
+  padding: 100px 70px;
+  position: relative;
+  text-transform: uppercase;
+  width: 100%;
+  z-index: 100; }
+
 .search-input-container {
   background-color: #fff;
   border-radius: 5px;
@@ -114,7 +130,3 @@ input.search-input {
   font-size: 15px;
   padding: 7px 20px;
   text-align: center; }
-
-  button.fetch-events {
-    margin-top: 150px; 
-    margin-bottom: 50px; }

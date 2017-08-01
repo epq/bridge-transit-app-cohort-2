@@ -1,15 +1,16 @@
 import React from 'react';
 import { EventsList } from './EventsList';
 
-export const CategoryPage = (props) => (
-  <div>
+export const EventsPage = (props) => (
+  <div className="Event-list">
     <h2>{props.chosenCategory.name} Events near Toronto, Ontario</h2>
-    <button className="fetch-events" onClick={ () => props.getEvents() }>
+    <button onClick={ () => props.getEvents() }>
       Fetch Events
     </button>
-    {props.events 
+    {props.events
       ? <EventsList events={props.events} />
       : null
     }
   </div>
-); 
+);
+
