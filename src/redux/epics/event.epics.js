@@ -8,6 +8,7 @@ const API_KEY_PATH = `?token=${EVENTBRITE_API_KEY}`;
 
 // SECTION: Events by category
 const CATEGORY_QUERY_PATH = '&location.address=toronto&categories=';
+let locationQuery = '';
 const CATEGORY_METHOD_PATH = 'search/';
 const reCategoryPath = /^\/category\/\d\d\d$/;
 export const returnEventsActionOnLocationChange = (action$) =>
@@ -18,22 +19,29 @@ export const returnEventsActionOnLocationChange = (action$) =>
         payload: action.payload.pathname.replace('/category/', '')
       }));
 
-export const getEventsEpic = (action$) =>
+export const getEventsEpic = (action$, store) =>
   action$.ofType(ACTION_TYPES.GET_EVENTS)
-    .mergeMap(action =>
-      Observable.ajax({
-        url: `${BASE_ENDPOINT}${CATEGORY_METHOD_PATH}${API_KEY_PATH}${CATEGORY_QUERY_PATH}${action.payload}`,
+    .mergeMap(action => {
+      console.log("ADDRESS");
+      console.log(store.getState().address);
+      if (store.getState().address.location) {
+        let location = store.getState().address.location;
+        locationQuery = `&location.latitude=${location.lat}&location.longitude=${location.lng}`;
+        console.log("location query: " + locationQuery);
+      }
+      return Observable.ajax({
+        url: `${BASE_ENDPOINT}${CATEGORY_METHOD_PATH}${API_KEY_PATH}${locationQuery}&categories=${action.payload}`,
         crossDomain: true
       })
-      .map(({ response }) => ({
-        type: ACTION_TYPES.SET_EVENTS,
-        payload: response,
-      }))
-      .catch(error => Observable.of({
-        type: ACTION_TYPES.SET_EVENTS_INVALIDATE,
-        payload: error
-      })) 
-    );
+        .map(({response}) => ({
+          type: ACTION_TYPES.SET_EVENTS,
+          payload: response,
+        }))
+        .catch(error => Observable.of({
+          type: ACTION_TYPES.SET_EVENTS_INVALIDATE,
+          payload: error
+        }))
+    });
 
 // SECTION: Single event
 const reEventPath = /^\/event\/(\d)+$/;
